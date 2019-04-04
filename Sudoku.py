@@ -2,11 +2,11 @@ class Sudoku:
     def __init__(self, filename):
         #TODO: May change puzzle from a list to a Dict, may be better for keeping track of possible numbers left
         self.puzzle = []
-        self.puzzle = self._read_puzzle(filename)
+        self.puzzle = self.read_puzzle(filename)
 
 
     #Parses comma separated .csv file and returns array with its contents
-    def _read_puzzle(self, filename):
+    def read_puzzle(self, filename):
         puzzle = []
 
         for line in open(filename):
