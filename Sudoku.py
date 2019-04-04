@@ -1,5 +1,6 @@
 class Sudoku:
     def __init__(self, filename):
+        #TODO: May change puzzle from a list to a Dict, may be better for keeping track of possible numbers left
         self.puzzle = []
         self.puzzle = self._read_puzzle(filename)
 
