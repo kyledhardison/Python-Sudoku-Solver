@@ -5,8 +5,6 @@ from Sudoku import Sudoku
 
 s = Sudoku('test_puzzle.csv')
 
-#s.print_puzzle()
-#print(s.puzzle)
-
-
+#s.print_puzzle(s.puzzle)
+#print(s.possible)
 
