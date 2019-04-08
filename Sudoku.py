@@ -56,8 +56,29 @@ class Sudoku:
             print('')
             print('-------------------')
 
+    #Verifies the given row for correctness
+    def verify_row(self, puzzle, row):
+        row_numbers = '123456789'
+        for i in puzzle[row]:
+            if(i != '0'):
+                if(row_numbers.find(i) >= 0):
+                    row_numbers = row_numbers.replace(i, '')
+                else:
+                    return False
+        return True
 
-    #TODO: Finish this guy, might need to be broken into different functions
+    #Verifies the given column for correctness
+    def verify_col(self, puzzle, col):
+        col_numbers = '123456789'
+        for i in range(0,9):
+            if(puzzle[i][col] != '0'):
+                if(col_numbers.find(puzzle[i][col]) >= 0):
+                    col_numbers = col_numbers.replace(puzzle[i][col], '')
+                else:
+                    return False
+        return True
+
+    #TODO: Finish this guy, might need to be broken into different functions. Maybe add in writing abilities to edit the possible puzzle?
     #Return True if cell value is valid, return false if it's not
     def verify_puzzle(self, puzzle):
         valid = True
