@@ -6,6 +6,8 @@ from Sudoku import Sudoku
 s = Sudoku('completed_puzzle.csv')
 
 #s.print_puzzle(s.puzzle)
+
+#print(s.puzzle)
 #print(s.possible)
 
-
+print(s.verify_puzzle(s.puzzle))

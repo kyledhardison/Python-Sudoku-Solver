@@ -6,7 +6,24 @@ class Sudoku:
         
         self.puzzle = self.read_puzzle(filename)
 
-        self.possible = []  #array to store all possible values for a given cell
+        #Defines the 9 3x3 cells in a sudoku puzzle.
+        #Ex: self.cells[0][0] would return (0, 0), the top left entry in the top left cell
+        #TODO: Find way to reference peers from the 3x3 cell given a box's coordinates
+        self.cells = {
+            0 : { 0 : (0, 0) , 1 : (0, 1), 2 : (0, 2),  3 : (1, 0) , 4 : (1, 1), 5 : (1, 2),  6 : (2, 0) , 7 : (2, 1), 8 : (2, 2)},
+            1 : { 0 : (0, 3) , 1 : (0, 4), 2 : (0, 5),  3 : (1, 3) , 4 : (1, 4), 5 : (1, 5),  6 : (2, 3) , 7 : (2, 4), 8 : (2, 5)},
+            2 : { 0 : (0, 6) , 1 : (0, 7), 2 : (0, 8),  3 : (1, 6) , 4 : (1, 7), 5 : (1, 8),  6 : (2, 6) , 7 : (2, 7), 8 : (2, 8)},
+            
+            3 : { 0 : (3, 0) , 1 : (3, 1), 2 : (3, 2),  3 : (4, 0) , 4 : (4, 1), 5 : (4, 2),  6 : (5, 0) , 7 : (5, 1), 8 : (5, 2)},
+            4 : { 0 : (3, 3) , 1 : (3, 4), 2 : (3, 5),  3 : (4, 3) , 4 : (4, 4), 5 : (4, 5),  6 : (5, 3) , 7 : (5, 4), 8 : (5, 5)},
+            5 : { 0 : (3, 6) , 1 : (3, 7), 2 : (3, 8),  3 : (4, 6) , 4 : (4, 7), 5 : (4, 8),  6 : (5, 6) , 7 : (5, 7), 8 : (5, 8)},
+
+            6 : { 0 : (6, 0) , 1 : (6, 1), 2 : (6, 2),  3 : (7, 0) , 4 : (7, 1), 5 : (7, 2),  6 : (8, 0) , 7 : (8, 1), 8 : (8, 2)},
+            7 : { 0 : (6, 3) , 1 : (6, 4), 2 : (6, 5),  3 : (7, 3) , 4 : (7, 4), 5 : (7, 5),  6 : (8, 3) , 7 : (8, 4), 8 : (8, 5)},
+            8 : { 0 : (6, 6) , 1 : (6, 7), 2 : (6, 8),  3 : (7, 6) , 4 : (7, 7), 5 : (7, 8),  6 : (8, 6) , 7 : (8, 7), 8 : (8, 8)},
+        }
+
+        self.possible = []  #array to store all possible values for a given cell with strings
 
         templist = []
         for _ in range(0, 9):
@@ -45,14 +62,12 @@ class Sudoku:
 
     #Function to print formatted puzzle
     def print_puzzle(self, puzzle):
-
         print('-------------------')    
         for i in range(0, 9):
             print("|", end='')
 
             for j in range(0,9):
                 print(puzzle[i][j] + '|', end='')
-
             print('')
             print('-------------------')
 
@@ -78,13 +93,24 @@ class Sudoku:
                     return False
         return True
 
-    #TODO: Finish this guy, might need to be broken into different functions. Maybe add in writing abilities to edit the possible puzzle?
-    #Return True if cell value is valid, return false if it's not
-    def verify_puzzle(self, puzzle):
-        valid = True
+    #Verifies the given 3x3 cell for correctness
+    def verify_cell(self, puzzle, cell_index):
+        cell_numbers = '123456789'
+        for box in self.cells[cell_index]:
+            #This looks complicated but it's just stepping through individual boxes like the rest of the "verify_*" methods
+            if(puzzle[self.cells[cell_index][box][0]][self.cells[cell_index][box][1]] != '0'):
+                if(cell_numbers.find(puzzle[self.cells[cell_index][box][0]][self.cells[cell_index][box][1]]) >= 0):
+                    cell_numbers = cell_numbers.replace(puzzle[self.cells[cell_index][box][0]][self.cells[cell_index][box][1]], '')
+                else:
+                    return False
+        return True
 
-        #row verification
-        #for i in range(0:9):
+
+    #Return True if entire puzzle is valid, return false if it's not
+    #NOTE: Valid != correct/solved
+    def verify_puzzle(self, puzzle):
+        for i in range(0,9):
+            if(not (self.verify_row(puzzle, i) and self.verify_col(puzzle, i) and self.verify_cell(puzzle, i))):
+                return False
+        return True
             
-                
-        return(valid)
