@@ -71,6 +71,41 @@ class Sudoku:
             print('')
             print('-------------------')
 
+    #Given a single box index, return the 3x3 cell index that contains it
+    #If index out of range, returns -1
+    def get_cell_by_index(self, x, y):
+        x = int(x)
+        y = int(y)
+        if(x >= 0 and x <= 2):
+            if(y >= 0 and y <= 2):
+                return 0
+            elif(y >= 3 and y <= 5):
+                return 3
+            elif(y >= 6 and y <= 8):
+                return 6
+            else:
+                return -1
+        elif(x >= 3 and x <= 5):
+            if(y >= 0 and y <= 2):
+                return 1
+            elif(y >= 3 and y <= 5):
+                return 4
+            elif(y >= 6 and y <= 8):
+                return 7
+            else:
+                return -1
+        elif(x >= 6 and x <= 8):
+            if(y >= 0 and y <= 2):
+                return 2
+            elif(y >= 3 and y <= 5):
+                return 5
+            elif(y >= 6 and y <= 8):
+                return 8
+            else:
+                return -1
+        else:
+            return -1
+
     #Verifies the given row for correctness
     def verify_row(self, puzzle, row):
         row_numbers = '123456789'
@@ -114,3 +149,6 @@ class Sudoku:
                 return False
         return True
             
+
+    def solve(self, puzzle, x, y):
+        pass

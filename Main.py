@@ -10,4 +10,4 @@ s = Sudoku('completed_puzzle.csv')
 #print(s.puzzle)
 #print(s.possible)
 
-print(s.verify_puzzle(s.puzzle))
+#print(s.verify_puzzle(s.puzzle))
