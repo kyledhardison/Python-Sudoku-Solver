@@ -1,14 +1,12 @@
-#TODO: Write code to verify rows/cols/cells
-
 class Sudoku:
     def __init__(self, filename):
+        #NOTE self.puzzle should be indexed like this: self.puzzle[row][col]
         self.puzzle = []    #array to store original puzzle
         
         self.puzzle = self.read_puzzle(filename)
 
         #Defines the 9 3x3 cells in a sudoku puzzle.
         #Ex: self.cells[0][0] would return (0, 0), the top left entry in the top left cell
-        #TODO: Find way to reference peers from the 3x3 cell given a box's coordinates
         self.cells = {
             0 : { 0 : (0, 0) , 1 : (0, 1), 2 : (0, 2),  3 : (1, 0) , 4 : (1, 1), 5 : (1, 2),  6 : (2, 0) , 7 : (2, 1), 8 : (2, 2)},
             1 : { 0 : (0, 3) , 1 : (0, 4), 2 : (0, 5),  3 : (1, 3) , 4 : (1, 4), 5 : (1, 5),  6 : (2, 3) , 7 : (2, 4), 8 : (2, 5)},
@@ -35,11 +33,34 @@ class Sudoku:
         for i in range(0,9):
             for j in range(0,9):
                 if(self.puzzle[i][j] != '0'):
-                    self.possible[i][j] = ''.join([c for c in self.possible[i][j] if c in self.puzzle[i][j]])   #Removing all values from possible array that are given in the puzzle
+                    #Removing all values from possible array that are given in the puzzle
+                    self.possible[i][j] = ''.join([c for c in self.possible[i][j] if c in self.puzzle[i][j]])
 
+        #Removing given numbers from their row/column/cell peer's possible strings
+        for i in range(0,9):
+            for j in range(0,9):
+                if(self.puzzle[i][j] != '0'):
+                    cell_index = self.get_cell_by_index(i, j)
+                    for k in range(0,9):
+                        if(k == j):
+                            pass
+                        else:
+                            self.possible[i][k] = self.possible[i][k].replace(self.puzzle[i][j], '') #Step through rows and modify possible strings
+                        if(k == i):
+                            pass
+                        else:
+                            self.possible[k][j] = self.possible[k][j].replace(self.puzzle[i][j], '') #Step through columns and modify possible strings
+                        
+                        if(self.cells[cell_index][k] == (i, j)):
+                            pass
+                        else:
+                            self.possible[self.cells[cell_index][k][0]][self.cells[cell_index][k][1]] \
+                                =self.possible[self.cells[cell_index][k][0]][self.cells[cell_index][k][1]].replace(self.puzzle[i][j], '') #Step through cells and modify possible strings
+               
         del templist
 
-        #TODO: process initial numbers and remove them from their peer's possibility list
+        #TODO: write a recursive solving function 
+
 
 
 
@@ -73,7 +94,7 @@ class Sudoku:
 
     #Given a single box index, return the 3x3 cell index that contains it
     #If index out of range, returns -1
-    def get_cell_by_index(self, x, y):
+    def get_cell_by_index(self, y, x):
         x = int(x)
         y = int(y)
         if(x >= 0 and x <= 2):
