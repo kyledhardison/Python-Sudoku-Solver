@@ -1,4 +1,7 @@
+import copy
 class Sudoku:
+    
+    
     def __init__(self, filename):
         #NOTE self.puzzle should be indexed like this: self.puzzle[row][col]
         self.puzzle = []    #array to store original puzzle
@@ -20,7 +23,7 @@ class Sudoku:
             7 : { 0 : (6, 3) , 1 : (6, 4), 2 : (6, 5),  3 : (7, 3) , 4 : (7, 4), 5 : (7, 5),  6 : (8, 3) , 7 : (8, 4), 8 : (8, 5)},
             8 : { 0 : (6, 6) , 1 : (6, 7), 2 : (6, 8),  3 : (7, 6) , 4 : (7, 7), 5 : (7, 8),  6 : (8, 6) , 7 : (8, 7), 8 : (8, 8)},
         }
-
+        
         self.possible = []  #array to store all possible values for a given cell with strings
 
         templist = []
@@ -46,6 +49,7 @@ class Sudoku:
                             pass
                         else:
                             self.possible[i][k] = self.possible[i][k].replace(self.puzzle[i][j], '') #Step through rows and modify possible strings
+
                         if(k == i):
                             pass
                         else:
@@ -58,6 +62,11 @@ class Sudoku:
                                 =self.possible[self.cells[cell_index][k][0]][self.cells[cell_index][k][1]].replace(self.puzzle[i][j], '') #Step through cells and modify possible strings
                
         del templist
+
+        #versions of puzzle and possible variables used in solving process
+        self.puzzle_solve = copy.deepcopy(self.puzzle)
+        self.possible_solve = copy.deepcopy(self.possible)
+        self.cycles = 0
 
         #TODO: write a recursive solving function 
 
@@ -91,6 +100,7 @@ class Sudoku:
                 print(puzzle[i][j] + '|', end='')
             print('')
             print('-------------------')
+
 
     #Given a single box index, return the 3x3 cell index that contains it
     #If index out of range, returns -1
@@ -127,6 +137,7 @@ class Sudoku:
         else:
             return -1
 
+
     #Verifies the given row for correctness
     def verify_row(self, puzzle, row):
         row_numbers = '123456789'
@@ -138,6 +149,7 @@ class Sudoku:
                     return False
         return True
 
+
     #Verifies the given column for correctness
     def verify_col(self, puzzle, col):
         col_numbers = '123456789'
@@ -148,6 +160,7 @@ class Sudoku:
                 else:
                     return False
         return True
+
 
     #Verifies the given 3x3 cell for correctness
     def verify_cell(self, puzzle, cell_index):
@@ -171,5 +184,57 @@ class Sudoku:
         return True
             
 
-    def solve(self, puzzle, x, y):
-        pass
+    #Sets self.puzzle_solve[row][col] to the next possible value if it exists
+    def set_box(self, row, col):
+        if(self.possible_solve[row][col]):
+            self.puzzle_solve[row][col] = copy.copy(self.possible_solve[row][col][0])
+            self.possible_solve[row][col] = self.possible_solve[row][col][1:]
+            return True
+        else:
+            return False
+
+
+    #Recursively solves the puzzle, writes solution to self.puzzle
+    #Returns true if solved, false if not solvable
+    def solve(self):
+        self.cycles += 1
+        row = -1
+        col = -1
+        break_loops = False
+        for i in range(0,9):
+            for j in range(0,9):
+                if(self.puzzle_solve[i][j] == '0'):
+                    row = int(i)
+                    col = int(j)
+                    break_loops = True
+                    break
+            if(break_loops):
+                break
+
+        #If no 0's are found, assume that the puzzle is solved
+        if(row == -1 and col == -1):
+            return True
+
+        #Set current box to possible value
+        self.set_box(row, col)
+
+        cell = self.get_cell_by_index(row, col)
+
+        while(True):
+            #If puzzle is not valid, try a new possible value if any exist
+            if(not (self.verify_cell(self.puzzle_solve, cell) and self.verify_row(self.puzzle_solve, row) and self.verify_col(self.puzzle_solve, col))):
+                #If there's no more possible values, return false
+                if(not self.set_box(row, col)):
+                    self.puzzle_solve[row][col] = '0'
+                    self.possible_solve[row][col] = copy.copy(self.possible[row][col])
+                    return False
+            else:
+                #Attempt to solve the next box of the puzzle, stepping back if no solutions exist with the given values
+                if(self.solve()):
+                    return True
+                else:
+                    #Try a new possible value if any exist, if there's no more possible values, return false
+                    if(not self.set_box(row, col)):
+                        self.puzzle_solve[row][col] = '0'
+                        self.possible_solve[row][col] = copy.copy(self.possible[row][col])
+                        return False
