@@ -1,18 +1,29 @@
 from Sudoku import Sudoku
 import csv
 import time
+import os.path
 
-#assuming that the puzzle is 9x9 and has at least one valid solution
+#Kyle Hardison & Sarah Evans Final Project
+#Sudoku Solver
+#Assuming that the puzzle is 9x9, in .csv format, and has at least one valid solution
+
+file_string = ""
+
+#Allowing the user to select which file they want to solve
+while True:
+    file_string = input("Enter the file name of the puzzle you want to solve (Ex: puzzle_1.csv): ")
+    if(os.path.isfile(file_string)):
+        print("")
+        print("")
+        break
+    else:
+        print("Please enter a valid file name. ")
+
 
 start = time.time()
-s = Sudoku('test_puzzle_2.csv')
+s = Sudoku(file_string)
 
-#This code can be used to print out the puzzle when it's solved:
-"""
-with open("output.csv", "w") as f:
-    writer = csv.writer(f)
-    writer.writerows(s.possible)
-"""
+
 print("Original Puzzle with 0's as placeholders: ")
 s.print_puzzle(s.puzzle)
 print('\n')

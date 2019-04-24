@@ -68,8 +68,6 @@ class Sudoku:
         self.possible_solve = copy.deepcopy(self.possible)
         self.cycles = 0
 
-        #TODO: write a recursive solving function 
-
 
 
 
